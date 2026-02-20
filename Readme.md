@@ -11,6 +11,16 @@
 ## Markdown 文档的预览显示
 1. 显示采用 TEdgeBrowser；
 2. HTML 内容采用内置的 WebServer + WebBroker 来输出给 WebBrowser；
+3. 模板页面：Template.html;
+4. CSS 文件：都在 "发布"文件夹下。程序执行时，WebBroker 需要将 CSS 文件加载后发送给浏览器。
+5. CSS 文件和模板文件放到程序 EXE 文件相同目录下。决定这个文件夹的代码是：
+~~~
+function TWebModule1.GetTemplatePath: string;
+begin
+  Result := ExtractFilePath(ParamStr(0));
+end;
+~~~
+所以，你可以修改这个代码来决定你想把 CSS 文件和模板文件放到哪个文件夹底下。
 
 ## 配置文件
 配置文件采用 Name=Value 的文本文件，方便阅读和编辑；
