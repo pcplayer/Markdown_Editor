@@ -1,0 +1,21 @@
+# 应用程序配置文件
+# 生成时间: 2026/01/30 13:49:51
+
+# 数据库文件名
+DataBase=D:\Pro\Markdown编辑器\Data\JaMarkdownData.db
+
+# 本地WebServer端口号
+WebPort=8080
+
+# 主界面左侧面板宽度
+LeftPanelWidth=300
+
+# 编辑器字体大小
+EditorFontSize=11
+
+# 窗体风格
+StyleName=Sky
+
+# 上次打开的文件夹
+LastFolder=
+
