@@ -37,6 +37,10 @@ end;
 4. 支持拖拽 .md 文件到本程序。但是，不能拖放到预览界面的 TEdgeBrowser 上面。
 5. 如果关联 .md 文件到本程序，在资源管理器里面，双击 .md 文件，自动打开本程序并加载和显示它。本程序没有建立关联的代码，使用者可以在 Windows 资源管理器里面手动创建 .md 文件和本程序的关联。
 
+## 解释这个程序的文章：
+1. [显示 Markdown 的文件](https://blog.csdn.net/pcplayer/article/details/154800268)
+2. [Markdown 的预览和编辑](https://blog.csdn.net/pcplayer/article/details/154841491)
+
 ## Summary
 This is a Markdown editor and viewer, by Delphi code, based on https://github.com/EtheaDev/MarkdownProcessor
 
