@@ -9,6 +9,13 @@ unit ObjectConfigSerializer;
   把参数配置对象的 published 属性，输出为通用数据类型的数据，放到 TConfigData 对象里面，
   是方便输出数据给其它地方（比如界面控件）使用。
 
+  用法：
+  具体的参数，创建一个从 TBaseConfig 继承的类，把要序列化的参数放在 published 里面；
+
+  序列化为文件，从文件反序列化回来，分别是用本单元的：
+   TObjectConfigSerializer.SaveToFile
+   TObjectConfigSerializer.LoadFromFile
+
   2025-10-24
 }
 interface

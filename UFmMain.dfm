@@ -30,6 +30,7 @@ object FmMain: TFmMain
   GlassFrame.Top = 64
   StyleElements = [seFont]
   OnActivate = FormActivate
+  OnClose = FormClose
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   OnResize = FormResize
@@ -204,6 +205,31 @@ object FmMain: TFmMain
       ImageIndex = 3
       ImageName = 'cassette-svgrepo'
       Images = VirtualImageList1
+    end
+    object Panel2: TPanel
+      Left = 360
+      Top = 2
+      Width = 479
+      Height = 48
+      Align = alLeft
+      BevelEdges = []
+      BevelOuter = bvNone
+      TabOrder = 0
+      object DBText1: TDBText
+        Left = 0
+        Top = 16
+        Width = 58
+        Height = 18
+        AutoSize = True
+        DataField = 'FileName'
+        DataSource = DataSource1
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -15
+        Font.Name = 'Tahoma'
+        Font.Style = []
+        ParentFont = False
+      end
     end
   end
   object PanelLeft: TPanel
@@ -1948,7 +1974,12 @@ object FmMain: TFmMain
   end
   object Timer1: TTimer
     OnTimer = Timer1Timer
-    Left = 496
-    Top = 256
+    Left = 472
+    Top = 288
+  end
+  object DataSource1: TDataSource
+    DataSet = DmJaMarkdown.FdqRecentFiles
+    Left = 480
+    Top = 81
   end
 end

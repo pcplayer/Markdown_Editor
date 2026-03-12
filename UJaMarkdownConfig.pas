@@ -13,7 +13,9 @@ type
     FFontSize: Integer;
     FStyleName: string;
     FLastFolder: string;
+    FLastFileName: string;
     procedure SetLastFolder(const Value: string);
+    function GetWebServerPort: Integer;
   public
     constructor Create; virtual;
     destructor Destroy;
@@ -25,7 +27,7 @@ type
     property DataBase: string read FDBFileName write FDBFileName;
 
     [ConfigProperty('本地WebServer端口号')]
-    property WebPort: Integer read FWebServerPort write FWebServerPort;
+    property WebPort: Integer read GetWebServerPort write FWebServerPort;
 
     [ConfigProperty('主界面左侧面板宽度')]
     property LeftPanelWidth: Integer read FLeftPanelWidth write FLeftPanelWidth;
@@ -38,6 +40,9 @@ type
 
     [ConfigProperty('上次打开的文件夹')]
     property LastFolder: string read FLastFolder write SetLastFolder;
+
+    [ConfigProperty('上次打开的文件')]
+    property LastFileName: string read FLastFileName write FLastFileName;
   end;
 
 implementation
@@ -66,6 +71,12 @@ end;
 destructor TMarkdownConfig.Destroy;
 begin
   inherited;
+end;
+
+function TMarkdownConfig.GetWebServerPort: Integer;
+begin
+  Result := FWebServerPort;
+  if Result = 0 then Result := 8080;
 end;
 
 procedure TMarkdownConfig.SetLastFolder(const Value: string);

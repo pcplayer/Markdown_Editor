@@ -23,7 +23,8 @@ uses
   Vcl.Bind.DBEngExt, System.Rtti, System.Bindings.Outputs, Vcl.Bind.Editors,
   Vcl.Samples.Bind.Editors, Data.Bind.Components, Vcl.TitleBarCtrls,
   Vcl.BaseImageCollection, Vcl.ImageCollection, System.ImageList, Vcl.ImgList,
-  Vcl.VirtualImageList, Vcl.VirtualImage, Vcl.Imaging.jpeg, JvAppInst;
+  Vcl.VirtualImageList, Vcl.VirtualImage, Vcl.Imaging.jpeg, JvAppInst, Data.DB,
+  Vcl.DBCtrls;
 
 type
   TFmMain = class(TForm)
@@ -73,6 +74,9 @@ type
     FrameRecentFile1: TFrameRecentFile;
     JvAppInstances1: TJvAppInstances;
     Timer1: TTimer;
+    Panel2: TPanel;
+    DBText1: TDBText;
+    DataSource1: TDataSource;
     procedure FormDestroy(Sender: TObject);
     procedure AcLocalServerExecute(Sender: TObject);
     procedure AcNewExecute(Sender: TObject);
@@ -85,6 +89,7 @@ type
     procedure ButtonStopClick(Sender: TObject);
     procedure ButtonOpenBrowserClick(Sender: TObject);
     procedure FormActivate(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormResize(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure JvAppInstances1CmdLineReceived(Sender: TObject; CmdLine: TStrings);
@@ -108,6 +113,8 @@ type
     procedure DoOnRecentFileOpen(Sender: TObject);
     procedure ReadFileNameFromParam;
     function GetMyVersionInfo: string;
+    procedure SaveLastFileName;
+    procedure SaveFileName2DB(const FileName: string);
 
     procedure WMDropFiles(var Msg: TWMDropFiles); message WM_DROPFILES;
   public
@@ -196,6 +203,7 @@ end;
 procedure TFmMain.AcSaveExecute(Sender: TObject);
 var
   APreview: Boolean;
+  Fn: string;
 begin
   APreview := False;
   if FMarkdownFileName <> '' then
@@ -205,6 +213,15 @@ begin
   end
   else
   begin
+    //新文件
+    if Memo1.Lines.Count = 0 then Exit;
+
+    //默认第一行标题就是文件名。第一行必须是 # + 空格，因为这事 Markdown 格式；
+    //Remove 函数，计算字符串是从 0 开始；
+    Fn := Memo1.Lines[0];
+    Fn := Fn.Remove(0, 2);
+    SaveDialog1.FileName := Fn + '.md';
+
     SaveDialog1.Title := 'Markdown编辑器另存为: ' + DmJaMarkdown.MyConfig.LastFolder;
     if SaveDialog1.Execute() then
     begin
@@ -212,7 +229,8 @@ begin
       Memo1.Lines.SaveToFile(FMarkdownFileName, TEncoding.UTF8);
       APreview := True;
       Self.Caption := FMarkdownFileName;
-      DmJaMarkdown.MyConfig.LastFolder := FMarkdownFileName;
+      DmJaMarkdown.MyConfig.LastFolder := ExtractFilePath(FMarkdownFileName);
+      Self.SaveFileName2DB(FMarkdownFileName);
     end;
   end;
 
@@ -319,6 +337,12 @@ begin
   ---------------------------------------------}
 end;
 
+procedure TFmMain.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+  //退出时保存最后打开的文件名
+  Self.SaveLastFileName;
+end;
+
 procedure TFmMain.FormCreate(Sender: TObject);
 var
   StyleName: string;
@@ -337,8 +361,9 @@ begin
   TStyleManager.TrySetStyle(VCLStylesCB.Items[VCLStylesCB.ItemIndex], False);
 
   DragAcceptFiles(Handle, True);  //让程序支持拖放文件到界面上；这句必须放在 Style 操作之后；放在前面不起作用。
-  Self.ReadFileNameFromParam;
   DmJaMarkdown.LoadDataFromDB;
+  EditPort.Text := IntToStr(DmJaMarkdown.MyConfig.WebPort);
+  Self.ReadFileNameFromParam;
 //  Self.CustomTitleBar.SystemColors := False;
 //  Self.CustomTitleBar.BackgroundColor := clBlue;
 end;
@@ -369,6 +394,7 @@ procedure TFmMain.JvAppInstances1CmdLineReceived(Sender: TObject; CmdLine:
 var
   Fn: string;
 begin
+  //当已经有一个实例运行时，用户双击一个 .md 文件，则传递文件名到这里，打开文件；
   if CmdLine.Count < 1 then Exit;
   Fn := CmdLine[0];
   Self.OpenFile(Fn, True);
@@ -402,9 +428,7 @@ begin
   Self.Caption := 'JaMarkdown Editor: ' + FileName;
 
   //写入数据库
-  DmJaMarkdown.LoadDataFromDB;
-  DmJaMarkdown.SetCurrentFileName(FileName);
-  DmJaMarkdown.MyConfig.LastFolder := FileName;
+  Self.SaveFileName2DB(FileName);
 
   if Preview then
   begin
@@ -421,19 +445,21 @@ begin
   //Wiondows 资源管理器里面双击 .md 或者打开 .md 触发启动本程序；
   //本程序依靠读取参数来获得文件名
   // 获取命令行参数
+  AFileName := '';
   if ParamCount > 0 then
   begin
     AFileName := ParamStr(1);
-    Self.OpenFile(AFileName, True);
+    if not FileExists(AFileName) then AFileName := '';
+   end;
 
-//    // 验证文件是否存在
-//    if FileExists(AFileName) then
-//    begin
-//      FMarkdownFileName := AFileName;
-//
-//      Self.OpenFile(AFileName, True);
-//    end;
-  end
+   //ParamStr 是来自双击 .md 文件启动后传递过来的 .md 文件名。
+  //如果这个名字存在则打开它。如果这个名字不存在，则打开上次退出程序时的那个文件。
+  if AFileName = '' then
+  begin
+    AFileName := DmJaMarkdown.MyConfig.LastFileName;
+  end;
+
+  if AFileName <> '' then Self.OpenFile(AFileName, True);
 end;
 
 procedure TFmMain.RichEditScrollToTop(const AEdit: TRichEdit);
@@ -443,6 +469,18 @@ begin
   AEdit.SelLength := 0; // 可选：取消任何文本选择
   SendMessage(AEdit.Handle, EM_SCROLLCARET, 0, 0); // .ScrollToCaret;  // 滚动到光标位置
   AEdit.SetFocus;
+end;
+
+procedure TFmMain.SaveFileName2DB(const FileName: string);
+begin
+  DmJaMarkdown.LoadDataFromDB;
+  DmJaMarkdown.SetCurrentFileName(FileName);
+  DmJaMarkdown.MyConfig.LastFolder := ExtractFilePath(FileName);
+end;
+
+procedure TFmMain.SaveLastFileName;
+begin
+  DmJaMarkdown.MyConfig.LastFileName := FMarkdownFileName;
 end;
 
 procedure TFmMain.SpeedButton1Click(Sender: TObject);
@@ -460,8 +498,11 @@ begin
   if not FServer.Active then
   begin
     FServer.Bindings.Clear;
+    //FServer.DefaultPort := DmJaMarkdown.MyConfig.WebPort;
     FServer.DefaultPort := StrToInt(EditPort.Text);
     FServer.Active := True;
+
+    DmJaMarkdown.MyConfig.WebPort := FServer.DefaultPort; //写入配置文件
   end;
 end;
 
