@@ -125,25 +125,24 @@ object FrameRecentFile: TFrameRecentFile
       Align = alClient
       BevelOuter = bvNone
       TabOrder = 1
-      object DBText1: TDBText
-        AlignWithMargins = True
-        Left = 3
-        Top = 3
-        Width = 217
-        Height = 44
-        Align = alClient
-        AutoSize = True
-        DataField = 'FileName'
-        DataSource = DataSource1
-        Font.Charset = GB2312_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -14
-        Font.Name = #24494#36719#38597#40657
-        Font.Style = []
-        ParentFont = False
-        WordWrap = True
-        ExplicitWidth = 56
-        ExplicitHeight = 20
+      DesignSize = (
+        223
+        50)
+      object SpeedButton1: TSpeedButton
+        Left = 135
+        Top = 13
+        Width = 24
+        Height = 24
+        OnClick = SpeedButton1Click
+      end
+      object EditFilter: TEdit
+        Left = 6
+        Top = 16
+        Width = 123
+        Height = 28
+        Anchors = [akLeft, akTop, akRight]
+        TabOrder = 0
+        OnKeyPress = EditFilterKeyPress
       end
     end
   end
