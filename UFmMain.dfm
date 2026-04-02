@@ -2,8 +2,8 @@ object FmMain: TFmMain
   Left = 271
   Top = 114
   Caption = 'Markdown '#32534#36753#22120
-  ClientHeight = 539
-  ClientWidth = 997
+  ClientHeight = 752
+  ClientWidth = 1047
   Color = clBtnFace
   CustomTitleBar.Control = TitleBarPanel1
   CustomTitleBar.Enabled = True
@@ -39,7 +39,7 @@ object FmMain: TFmMain
   object Splitter1: TSplitter
     Left = 300
     Top = 120
-    Height = 400
+    Height = 613
     ExplicitLeft = 504
     ExplicitTop = 208
     ExplicitHeight = 100
@@ -47,8 +47,8 @@ object FmMain: TFmMain
   object PageControl1: TPageControl
     Left = 303
     Top = 120
-    Width = 694
-    Height = 400
+    Width = 744
+    Height = 613
     ActivePage = TabSheet1
     Align = alClient
     TabHeight = 30
@@ -60,8 +60,8 @@ object FmMain: TFmMain
         AlignWithMargins = True
         Left = 3
         Top = 3
-        Width = 680
-        Height = 354
+        Width = 730
+        Height = 567
         Align = alClient
         Font.Charset = GB2312_CHARSET
         Font.Color = clWindowText
@@ -80,8 +80,8 @@ object FmMain: TFmMain
       object EdgeBrowser1: TEdgeBrowser
         Left = 0
         Top = 0
-        Width = 686
-        Height = 360
+        Width = 736
+        Height = 573
         Align = alClient
         TabOrder = 0
         AllowSingleSignOnUsingOSPrimaryAccount = False
@@ -158,7 +158,7 @@ object FmMain: TFmMain
   object ControlBar1: TControlBar
     Left = 0
     Top = 63
-    Width = 997
+    Width = 1047
     Height = 57
     Align = alTop
     TabOrder = 2
@@ -196,7 +196,7 @@ object FmMain: TFmMain
       Images = VirtualImageList1
     end
     object SpeedButton5: TSpeedButton
-      Left = 891
+      Left = 889
       Top = 2
       Width = 100
       Height = 48
@@ -236,7 +236,7 @@ object FmMain: TFmMain
     Left = 0
     Top = 120
     Width = 300
-    Height = 400
+    Height = 613
     Align = alLeft
     TabOrder = 3
     object Splitter2: TSplitter
@@ -296,27 +296,27 @@ object FmMain: TFmMain
       Left = 1
       Top = 224
       Width = 298
-      Height = 175
+      Height = 388
       Align = alClient
       TabOrder = 2
       ExplicitLeft = 1
       ExplicitTop = 224
       ExplicitWidth = 298
-      ExplicitHeight = 175
+      ExplicitHeight = 388
       inherited Splitter1: TSplitter
-        Top = 94
+        Top = 307
         Width = 298
         ExplicitTop = 94
         ExplicitWidth = 298
       end
       inherited DBGrid1: TDBGrid
         Width = 298
-        Height = 44
+        Height = 257
       end
       inherited DBMemo1: TDBMemo
-        Top = 97
+        Top = 310
         Width = 298
-        ExplicitTop = 97
+        ExplicitTop = 310
         ExplicitWidth = 298
       end
       inherited Panel1: TPanel
@@ -325,18 +325,14 @@ object FmMain: TFmMain
         inherited Panel3: TPanel
           Width = 186
           ExplicitWidth = 186
-          inherited DBText1: TDBText
-            Width = 180
-            Height = 44
-          end
         end
       end
     end
   end
   object StatusBar1: TStatusBar
     Left = 0
-    Top = 520
-    Width = 997
+    Top = 733
+    Width = 1047
     Height = 19
     Panels = <
       item
@@ -353,22 +349,23 @@ object FmMain: TFmMain
   object TitleBarPanel1: TTitleBarPanel
     Left = 0
     Top = 0
-    Width = 997
+    Width = 1047
     Height = 63
     CustomButtons = <>
     DesignSize = (
-      997
+      1047
       63)
     object Label2: TLabel
-      Left = 715
+      Left = 765
       Top = 35
       Width = 24
       Height = 13
       Anchors = [akTop, akRight]
       Caption = #23383#21495
+      ExplicitLeft = 715
     end
     object VirtualImage1: TVirtualImage
-      Left = 640
+      Left = 690
       Top = -4
       Width = 63
       Height = 63
@@ -378,9 +375,10 @@ object FmMain: TFmMain
       ImageHeight = 0
       ImageIndex = 0
       ImageName = 'cha-rect-swear-svgrepo-com'
+      ExplicitLeft = 640
     end
     object VCLStylesCB: TComboBox
-      Left = 832
+      Left = 882
       Top = 29
       Width = 145
       Height = 21
@@ -392,7 +390,7 @@ object FmMain: TFmMain
       OnKeyPress = VCLStylesCBKeyPress
     end
     object SpinEdit1: TSpinEdit
-      Left = 745
+      Left = 795
       Top = 30
       Width = 68
       Height = 22

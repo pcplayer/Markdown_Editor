@@ -52,6 +52,8 @@ type
     { Public declarations }
     procedure SetCurrentFileName(const AFileName: string);
     procedure NewFolder(const FolderName: string);
+    procedure FilterRecentFile(const AFilter: string);
+
     property CurrentFolder: string read GetCurrentFolder;
     property CurrentFileName: string read GetCurrentFileName;
 
@@ -85,13 +87,21 @@ procedure TDmJaMarkdown.DataModuleCreate(Sender: TObject);
 begin
   FConfig := TMarkdownConfig.Create;
   TObjectConfigSerializer.LoadFromFile(FConfig, Self.GetConfigFileName);
-
-
 end;
 
 procedure TDmJaMarkdown.FDConnection1BeforeConnect(Sender: TObject);
 begin
   FdConnection1.Params.Values['DataBase'] := Self.FConfig.DataBase;
+end;
+
+procedure TDmJaMarkdown.FilterRecentFile(const AFilter: string);
+begin
+  with FdqRecentFiles do
+  begin
+    Filtered := False;
+    Filter := 'FileName like ' + QuotedStr('%' + AFilter + '%');
+    Filtered := True;
+  end;
 end;
 
 function TDmJaMarkdown.GetConfigFileName: string;
